@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+        <meta charset="UTF-8">
+        <title>Meu Pet Virtual</title>
+
+        <style>
+        body {
+            transition: background-image 1s ease-in-out;
+        }
+
+        .estrelas {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            display: none;
+        }
+
+        .estrelas::after {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow:
+                50px 100px white,
+                150px 200px white,
+                300px 50px white,
+                400px 300px white,
+                600px 150px white,
+                800px 250px white,
+                1000px 100px white;
+            animation: piscar 2s infinite alternate;
+        }
+
+        @keyframes piscar {
+            from { opacity: 0.2; }
+            to { opacity: 1; }
+        }
+    </style>
+    </head>
+
+    <body style="
+    background-image: url('savana.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;" class="min-h-screen flex flex-col">
+
+  <div class="estrelas"></div>
+
+  <div class="p-4">
+        <input type="checkbox" id="toggleModo" class="toggle toggle-primary">
+    </div>
+
+ <div class="flex flex-col items-center justify-center flex-1">
+        <img id="leao" src="leao.png" class="w-full max-w-md"/>
+
+        <div class="mt-10">
+        <img id="carne" src="carne.png"  class="w-32 active:scale-95 transition cursor-pointer" onclick="alimentar()"/>
+</div>
+</div>
+
+<div style="position: fixed; bottom: 10px; right: 10px; text-align: center;">
+
+<p id="textoMoreno"
+   style="
+   display: none;
+   position: fixed;
+   top: 10%;
+   left: 50%;
+   transform: translateX(-50%);
+   font-size: 28px;
+   font-weight: bold;
+   color: white;
+   text-shadow: 2px 2px 5px black;
+   z-index: 999;
+   ">
+   A pedido do professor Moreno
+</p>
+
+  <div style="margin-top: 5px;">
+    
+    <p style="font-size: 10px;" class="bg-white/80 px-2 rounded">Ferlini Gostosinho</p>
+<button onclick="mostrarFerlini()" class="btn btn-xs bg-white text-black">?</button>
+
+  </div>
+
+  <div style="margin-top: 5px;">
+    
+  <p style="font-size: 10px;" class="bg-white/80 px-2 rounded">Dacinho lindo</p>
+<button onclick="mostrarDacio()" class="btn btn-xs bg-white text-black">?</button>
+
+  </div>
+
+</div>
+
+<img id="imgFerlini" src="ferlini_gostosinho.jpeg" 
+     style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); width:200px; z-index:999;">
+
+<img id="imgDacio" src="dacinho_lindo.jpeg" 
+     style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); width:200px; z-index:999;">
+    </body>
+
+    <script src="atividade7.js"></script>
+</html>
+
