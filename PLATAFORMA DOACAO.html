@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Doação de Alimentos - ODS 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <header class="bg-success text-white text-center py-4 mb-4 shadow-sm">
+        <div class="container">
+            <h1 class="h3"><i class="bi bi-heart-fill text-warning me-2"></i>Logística Solidária - ODS 02</h1>
+            <p class="mb-0 opacity-75">Conectando excedentes de alimentos a quem mais precisa por ordem de validade</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row g-4">
+            
+            <section class="col-lg-5">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-dark text-white py-3">
+                        <h2 class="h5 mb-0"><i class="bi bi-shop me-2 text-success"></i>Painel do Doador</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-muted small">Cadastre os alimentos que estão próximos ao vencimento para entrarem na fila de doação.</p>
+                        
+                        <form id="formDoacao" novalidate>
+                            <div class="mb-3">
+                                <label for="nomeAlimento" class="form-label fw-bold">Descrição do Alimento</label>
+                                <input type="text" class="form-control" id="nomeAlimento" placeholder="Ex: 5kg de Arroz, 10 Marmitas de Frango" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="dataValidade" class="form-label fw-bold">Data de Validade / Vencimento</label>
+                                <input type="date" class="form-control" id="dataValidade" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="estabelecimento" class="form-label fw-bold">Estabelecimento</label>
+                                <input type="text" class="form-control" id="estabelecimento" placeholder="Ex: Restaurante do Silva" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
+                                <i class="bi bi-plus-circle me-2"></i>Disponibilizar para Fila
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section class="col-lg-7">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                        <h2 class="h5 mb-0"><i class="bi bi-building-heart me-2"></i>Painel de Retirada (ONGs)</h2>
+                        <span class="badge bg-warning text-dark fw-bold" id="contadorFila">Fila: 0 itens</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-muted small">Abaixo estão listados as doações organizadas rigorosamente pela <strong>Fila de Prioridade de Validade</strong> (os itens que vencem primeiro saem na frente).</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Prioridade</th>
+                                        <th scope="col">Alimento</th>
+                                        <th scope="col">Doador</th>
+                                        <th scope="col">Vencimento</th>
+                                        <th scope="col" class="text-end">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="corpoTabelaFila">
+                                    <tr id="linhaVazia">
+                                        <td colspan="5" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
+                                            Nenhum alimento na fila de doações no momento.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="PLATAFORMA DOACAO.js"></script>
+</body>
+</html>
