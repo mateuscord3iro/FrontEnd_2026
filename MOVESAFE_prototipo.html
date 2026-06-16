@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movesafe - Análise Biomecânica Inteligente</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --dark-bg: #090d16;
+            --dark-card: #111827;
+            --emerald: #10b981;
+            --emerald-hover: #059669;
+            --accent-blue: #3b82f6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #1f2937;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Cores de Destaque */
+        .text-emerald { color: var(--emerald); }
+        .bg-emerald { background-color: var(--emerald); }
+        
+        .btn-emerald {
+            background-color: var(--emerald);
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-emerald:hover {
+            background-color: var(--emerald-hover);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        .btn-outline-emerald {
+            border: 2px solid var(--emerald);
+            color: var(--emerald);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-emerald:hover, .btn-outline-emerald.active {
+            background-color: var(--emerald) !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* Navbar Customizada */
+        .navbar-custom {
+            background-color: rgba(9, 13, 22, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--emerald) !important;
+        }
+
+        .hero-section {
+            padding: 140px 0 100px;
+            position: relative;
+            background: radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .feature-card {
+            background-color: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--emerald);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--emerald), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Simulador Section */
+        .simulator-box {
+            background-color: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .canvas-container {
+            position: relative;
+            background-color: #000;
+            aspect-ratio: 16/9;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .simulation-overlay-ui {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .overlay-badge {
+            background-color: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .controls-panel {
+            background-color: rgba(17, 24, 39, 0.95);
+            padding: 25px;
+        }
+
+        .table-custom {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .table-custom tr {
+            background-color: var(--dark-card);
+            transition: all 0.2s ease;
+        }
+        .table-custom tr:hover {
+            transform: scale(1.01);
+            background-color: #1f2937;
+        }
+        .table-custom th {
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+        .table-custom td {
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 15px;
+            color: var(--text-primary);
+        }
+        .table-custom td:first-child {
+            border-left: 1px solid var(--border-color);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            font-weight: 600;
+        }
+        .table-custom td:last-child {
+            border-right: 1px solid var(--border-color);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .table-custom .highlight-row {
+            border: 2px solid var(--emerald) !important;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.15) 100%);
+        }
+        .table-custom .highlight-row td {
+            border-top: 1.5px solid var(--emerald);
+            border-bottom: 1.5px solid var(--emerald);
+        }
+        .table-custom .highlight-row td:first-child {
+            border-left: 1.5px solid var(--emerald);
+        }
+        .table-custom .highlight-row td:last-child {
+            border-right: 1.5px solid var(--emerald);
+        }
+
+        /* Documentação / Requisitos Tab UI */
+        .doc-container {
+            background-color: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .doc-sidebar .nav-link {
+            text-align: left;
+            margin: 5px 0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            border: 1px solid transparent;
+        }
+        .doc-sidebar .nav-link.active {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: var(--emerald) !important;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .doc-content {
+            border-left: 1px solid var(--border-color);
+            padding-left: 30px;
+        }
+
+        .team-card {
+            background-color: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .team-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--emerald));
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* Toast de Notificação customizado */
+        .toast-custom {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            background-color: var(--dark-card);
+            border: 1.5px solid var(--emerald);
+            color: #fff;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast de Feedback -->
+    <div id="customToast" class="toast-custom p-3" role="alert">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-circle-check text-emerald fs-5"></i>
+            <div>
+                <strong id="toastTitle">Sucesso!</strong>
+                <div id="toastBody" class="small text-secondary">Ação concluída com êxito.</div>
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-auto" onclick="closeToast()"></button>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" stroke="#10b981" stroke-width="3"/>
+                    <path d="M11 16L15 20L21 12" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>MOVE<span class="text-emerald">SAFE</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="#inicio">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#funcionamento">Como Funciona</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#simulador">Simulador Biomecânico</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#comparacao">Comparativo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#documentacao">Documentação</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#equipe">Equipe</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="#simulador" class="btn btn-emerald px-4 py-2 rounded-pill">Testar MVP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <span class="badge bg-dark border border-emerald text-emerald px-3 py-2 rounded-pill mb-4">
+                        <i class="fa-solid fa-bolt me-1"></i> Projeto Integrador 3º Semestre ESOFT
+                    </span>
+                    <h1 class="display-4 fw-extrabold mb-3">
+                        Análise de Postura com <span class="text-emerald">Inteligência Artificial</span> e Suporte de Especialistas.
+                    </h1>
+                    <p class="lead text-secondary mb-4">
+                        A Movesafe avalia seus exercícios de musculação em tempo real. Identifique falhas posturais na execução do agachamento, supino, levantamento terra, remadas e desenvolvimento de ombros com segurança absoluta.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#simulador" class="btn btn-emerald px-4 py-3 rounded-pill btn-lg">
+                            <i class="fa-solid fa-play me-2"></i>Iniciar Simulação
+                        </a>
+                        <a href="#documentacao" class="btn btn-outline-emerald px-4 py-3 rounded-pill btn-lg">
+                            <i class="fa-solid fa-file-invoice me-2"></i>Ver Requisitos
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-2xl border border-secondary" style="border-color: rgba(255,255,255,0.1) !important;">
+                            <div class="bg-black d-flex flex-column align-items-center justify-content-center p-4 text-center">
+                                <i class="fa-solid fa-heart-pulse text-emerald mb-3 animate-pulse" style="font-size: 4.5rem;"></i>
+                                <h4 class="fw-bold">Movesafe Core Engine</h4>
+                                <p class="text-secondary small max-w-xs mx-auto">Visão Computacional & Feedback Humano trabalhando juntos para mitigar lesões musculares e articulares.</p>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 mt-2">Pronto para Validação Acadêmica</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="funcionamento" class="py-5 bg-dark border-top border-bottom" style="border-color: var(--border-color) !important;">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Como o <span class="text-emerald">Movesafe</span> funciona?</h2>
+                <p class="text-secondary max-w-xl mx-auto">Desenvolvemos uma jornada simples e inovadora em 3 etapas combinadas para extrair o melhor de duas vertentes tecnológicas.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-video"></i></div>
+                        <h4 class="fw-bold mb-3">1. Gravação Simples</h4>
+                        <p class="text-secondary mb-0">O aluno grava um vídeo curto (até 30 segundos) de perfil ou de frente enquanto executa sua série habitual em qualquer ambiente ou academia.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-circle-nodes"></i></div>
+                        <h4 class="fw-bold mb-3">2. Análise Pose-Estimation</h4>
+                        <p class="text-secondary mb-0">Nossa rede neural proprietária traça o esqueleto biomecânico, medindo automaticamente ângulos e estabilidade articular no envio.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                        <h4 class="fw-bold mb-3">3. Feedback do Especialista</h4>
+                        <p class="text-secondary mb-0">Profissionais de Educação Física revisam o mapeamento assíncrono e validam o relatório final de correções customizadas para o aluno.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="simulador" class="py-5">
+        <div class="container py-4">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5">
+                    <span class="text-emerald fw-bold text-uppercase tracking-wider small">Validação Prática</span>
+                    <h2 class="display-5 fw-bold mt-2 mb-3">Simulador do <span class="text-emerald">Algoritmo</span></h2>
+                    <p class="text-secondary mb-4">
+                        Apresente a inovação técnica de forma prática para a banca avaliadora! Selecione um exercício abaixo (incluindo as novas variações recomendadas para testes), execute a simulação do motor de IA e analise o feedback biomecânico estrutural.
+                    </p>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-secondary">Escolha o Exercício para Analisar:</label>
+                        <div class="d-flex flex-column gap-2" id="exerciseSelector">
+                            <button class="btn btn-outline-emerald text-start p-3 rounded-3 active" onclick="selectExercise('squat', this)">
+                                <i class="fa-solid fa-person-walking me-2"></i> Agachamento Livre (Squat)
+                            </button>
+                            <button class="btn btn-outline-emerald text-start p-3 rounded-3" onclick="selectExercise('deadlift', this)">
+                                <i class="fa-solid fa-weight-hanging me-2"></i> Levantamento Terra (Deadlift)
+                            </button>
+                            <button class="btn btn-outline-emerald text-start p-3 rounded-3" onclick="selectExercise('bentoverrow', this)">
+                                <i class="fa-solid fa-person-falling-burst me-2"></i> Remada Curvada (Bent-Over Row)
+                            </button>
+                            <button class="btn btn-outline-emerald text-start p-3 rounded-3" onclick="selectExercise('shoulderpress', this)">
+                                <i class="fa-solid fa-arrows-up-down me-2"></i> Desenvolvimento com Halteres
+                            </button>
+                            <button class="btn btn-outline-emerald text-start p-3 rounded-3" onclick="selectExercise('benchpress', this)">
+                                <i class="fa-solid fa-bed me-2"></i> Supino Reto (Bench Press)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-emerald btn-lg px-4" id="btnSimulate" onclick="startSimulation()">
+                            <i class="fa-solid fa-microchip me-2"></i> Simular Processamento
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg px-3 text-white" id="btnReset" onclick="resetSimulator()" disabled>
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="simulator-box">
+                        <div class="canvas-container">
+                            <canvas id="biomechanicCanvas"></canvas>
+                            <div class="simulation-overlay-ui">
+                                <span class="overlay-badge" id="statusBadge">
+                                    <span class="spinner-grow spinner-grow-sm text-emerald d-none" id="statusSpinner"></span>
+                                    <i class="fa-solid fa-circle" id="statusDot" style="color: gray;"></i> 
+                                    <span id="statusText">Aguardando Vídeo</span>
+                                </span>
+                                <span class="overlay-badge">
+                                    <i class="fa-solid fa-camera"></i> CAM_Postural_01
+                                </span>
+                            </div>
+                        </div>
+                        <div class="controls-panel">
+                            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-emerald"></i>
+                                Relatório Diagnóstico Biomecânico (Mock-AI)
+                            </h5>
+                            
+                            <!-- Barra de Progresso Simulado -->
+                            <div class="progress mb-3 d-none" id="simProgressContainer" style="height: 6px; background-color: var(--border-color);">
+                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" id="simProgressBar"></div>
+                            </div>
+
+                            <div id="reportPlaceholder" class="text-center py-4 text-secondary">
+                                <i class="fa-solid fa-clock-rotate-left fs-3 mb-2"></i>
+                                <p class="mb-0 small">Aperte em "Simular Processamento" para renderizar as linhas de Pose-Estimation e extrair o feedback instantâneo das articulações.</p>
+                            </div>
+
+                            <div id="reportResult" class="d-none">
+                                <div class="p-3 rounded-3 border mb-3" id="analysisResultCard">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0" id="resultTitle">Análise</h6>
+                                        <span class="badge" id="resultBadge">Alinhamento OK</span>
+                                    </div>
+                                    <p class="small mb-0" id="resultDesc"></p>
+                                </div>
+                                <div class="bg-dark p-3 rounded-3 border border-secondary" style="border-color: rgba(255,255,255,0.05) !important;">
+                                    <div class="d-flex gap-2 align-items-center mb-1">
+                                        <i class="fa-solid fa-graduation-cap text-emerald"></i>
+                                        <span class="small fw-bold text-emerald">DICA DO PERSONAL / FISIOTERAPEUTA</span>
+                                    </div>
+                                    <p class="small text-secondary mb-0 italic" id="expertAdvice"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparacao" class="py-5 bg-dark border-top border-bottom" style="border-color: var(--border-color) !important;">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="text-emerald fw-bold text-uppercase tracking-wider small">Análise de Mercado</span>
+                <h2 class="fw-bold mt-2">Diferenciais Competitivos</h2>
+                <p class="text-secondary max-w-xl mx-auto">Veja como o Movesafe se destaca das soluções corporativas atuais aliando tecnologia ao know-how técnico humano de educadores físicos.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom text-white align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 30%;">Recurso / Diferencial</th>
+                            <th class="text-center" scope="col">Movesafe</th>
+                            <th class="text-center text-secondary" scope="col">Freeletics</th>
+                            <th class="text-center text-secondary" scope="col">Nike Training</th>
+                            <th class="text-center text-secondary" scope="col">Personal Físico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>Análise de Postura por Vídeo</td>
+                            <td class="text-center text-emerald"><i class="fa-solid fa-circle-check fs-5"></i> Sim (Automática)</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-check fs-5 text-success"></i> Sim (Apenas Presencial)</td>
+                        </tr>
+                        <tr>
+                            <td>Mapeamento Ósseo Artificial</td>
+                            <td class="text-center text-emerald"><i class="fa-solid fa-circle-check fs-5"></i> Sim (Pose estimation)</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não (Visual humano)</td>
+                        </tr>
+                        <tr>
+                            <td>Consultoria / Feedback Especializado</td>
+                            <td class="text-center text-emerald"><i class="fa-solid fa-circle-check fs-5"></i> Sim (Parceiros/Assíncrono)</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-secondary"><i class="fa-solid fa-circle-xmark fs-5"></i> Não</td>
+                            <td class="text-center text-emerald"><i class="fa-solid fa-circle-check fs-5"></i> Sim</td>
+                        </tr>
+                        <tr>
+                            <td>Custo Mensal Estimado</td>
+                            <td class="text-center text-emerald fw-bold">Baixo (~R$ 29,90)</td>
+                            <td class="text-center text-secondary">Médio (~R$ 49,90)</td>
+                            <td class="text-center text-emerald"><i class="fa-solid fa-circle-check fs-5 text-success"></i> Grátis</td>
+                            <td class="text-center text-danger fw-bold">Muito Alto (>R$ 300,00)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="documentacao" class="py-5">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="text-emerald fw-bold text-uppercase tracking-wider small">Entrega Acadêmica</span>
+                <h2 class="fw-bold mt-2">Especificação de Software</h2>
+                <p class="text-secondary max-w-xl mx-auto">Acesso rápido aos documentos de requisitos do sistema, decisões de UI/UX e justificativas tecnológicas integrados para validação da entrega de Front-End.</p>
+            </div>
+
+            <div class="doc-container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="nav flex-column nav-pills doc-sidebar" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-objetivos" type="button" role="tab"><i class="fa-solid fa-bullseye me-2"></i> 1. Escopo e Objetivos</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-requisitos" type="button" role="tab"><i class="fa-solid fa-list-check me-2"></i> 2. Requisitos Funcionais</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-layout" type="button" role="tab"><i class="fa-solid fa-compass-drafting me-2"></i> 3. Diretrizes de UI/UX</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-stack" type="button" role="tab"><i class="fa-solid fa-cubes me-2"></i> 4. Tecnologias Aplicadas</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="tab-content doc-content">
+                            <!-- Aba 1 -->
+                            <div class="tab-pane fade show active" id="tab-objetivos" role="tabpanel">
+                                <h4 class="fw-bold mb-3 text-emerald">1. Escopo e Objetivos do Projeto</h4>
+                                <p>O projeto **Movesafe** surge como solução para mitigar o alto índice de lesões na prática desportiva da musculação causados por vícios posturais mecânicos. O objetivo front-end é prover uma interface fluida, onde tanto alunos quanto especialistas consigam analisar vídeos interativamente de forma otimizada e objetiva.</p>
+                                <h5 class="fw-bold text-white mt-4 mb-2">Visão do Produto</h5>
+                                <p class="text-secondary">Uma aplicação web que atua como barreira preventiva auxiliando academias e profissionais autônomos na correção biomecânica à distância.</p>
+                            </div>
+
+                            <!-- Aba 2 -->
+                            <div class="tab-pane fade" id="tab-requisitos" role="tabpanel">
+                                <h4 class="fw-bold mb-3 text-emerald">2. Requisitos do Sistema</h4>
+                                <h5 class="fw-bold text-white mb-2">Requisitos Funcionais (RF)</h5>
+                                <ul class="text-secondary">
+                                    <li><strong>RF01 - Upload de Exercício:</strong> O sistema deve permitir ao usuário enviar seu vídeo executando atividades pré-selecionadas.</li>
+                                    <li><strong>RF02 - Mapeamento Articular (Pose Estimation):</strong> O software deve plotar sobre o vídeo as coordenadas dos marcadores estruturais.</li>
+                                    <li><strong>RF03 - Diagnóstico Rápido:</strong> Exibir se a posição da coluna vertebral e as angulações de joelho e cotovelos estão dentro dos limites de segurança.</li>
+                                    <li><strong>RF04 - Integração Fisioterápica:</strong> Permitir o recebimento de recomendações em formato de texto geradas por especialistas parceiros de forma assíncrona.</li>
+                                </ul>
+                                <h5 class="fw-bold text-white mt-4 mb-2">Requisitos Não Funcionais (RNF)</h5>
+                                <ul class="text-secondary">
+                                    <li><strong>RNF01 - Responsividade:</strong> A página do simulador deve adaptar-se perfeitamente a dispositivos mobile (telas pequenas de treino).</li>
+                                    <li><strong>RNF02 - Baixa Latência:</strong> O processamento visual deve responder em tempo recorde no front-end.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Aba 3 -->
+                            <div class="tab-pane fade" id="tab-layout" role="tabpanel">
+                                <h4 class="fw-bold mb-3 text-emerald">3. Diretrizes de Layout (UI/UX)</h4>
+                                <p>A identidade visual do Movesafe foi projetada visando alto contraste em ambientes de pouca iluminação (comum em academias) e visual moderno focado em alta tecnologia e segurança.</p>
+                                <h5 class="fw-bold text-white mt-4 mb-2">Cores Primárias e Significado</h5>
+                                <ul class="text-secondary">
+                                    <li><strong>Charcoal / Dark Slate:</strong> Utilizados no background principal para proporcionar conforto aos olhos e modernidade.</li>
+                                    <li><strong>Verde Esmeralda (#10b981):</strong> Cor principal de feedback positivo, representando segurança, correção de postura adequada e vitalidade.</li>
+                                    <li><strong>Azul Esportivo (#3b82f6):</strong> Cor auxiliar que ancora o design em elementos de interatividade tecnológica.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Aba 4 -->
+                            <div class="tab-pane fade" id="tab-stack" role="tabpanel">
+                                <h4 class="fw-bold mb-3 text-emerald">4. Justificativa de Tecnologias Aplicadas</h4>
+                                <p>Alinhando-se aos objetivos da disciplina acadêmica do 3º Semestre ministrada pelo **Prof. Dacio Machado**, a estrutura de desenvolvimento foi definida por:</p>
+                                <ul class="text-secondary">
+                                    <li class="mb-2"><strong>Bootstrap 5 (CSS Framework):</strong> Escolha ideal para estruturar a grade responsiva rápida, flexibilidade de componentes (Navs, Tabs, Grids) e conformidade estética limpa.</li>
+                                    <li class="mb-2"><strong>Vanilla Javascript:</strong> Utilizado para o motor lógico de simulação de canvas, manipulação e animação de marcadores esqueléticos, e controle interativo de interfaces sem dependências pesadas externas.</li>
+                                    <li class="mb-2"><strong>FontAwesome & Google Fonts:</strong> Tipografia base em *Plus Jakarta Sans* focada em máxima legibilidade em dispositivos móveis e ícones corporativos de alta fidelidade.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipe" class="py-5 bg-dark border-top" style="border-color: var(--border-color) !important;">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="text-emerald fw-bold text-uppercase tracking-wider small">Grupo Acadêmico</span>
+                <h2 class="fw-bold mt-2">Integrantes do Projeto</h2>
+                <p class="text-secondary">Desenvolvedores da Solução - Alunos do 3º Semestre de Engenharia de Software</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="team-card">
+                        <div class="team-avatar">FC</div>
+                        <h6 class="fw-bold mb-1 text-white">Felipe</h6>
+                        <span class="small text-secondary">Conti</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="team-card">
+                        <div class="team-avatar" style="background: linear-gradient(135deg, var(--emerald), var(--accent-blue));">MC</div>
+                        <h6 class="fw-bold mb-1 text-white">Mateus</h6>
+                        <span class="small text-secondary">Cordeiro</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="team-card">
+                        <div class="team-avatar">PF</div>
+                        <h6 class="fw-bold mb-1 text-white">Paulo</h6>
+                        <span class="small text-secondary">Fortunato</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="team-card">
+                        <div class="team-avatar">PP</div>
+                        <h6 class="fw-bold mb-1 text-white">Pedro H.</h6>
+                        <span class="small text-secondary">Piciani</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="team-card">
+                        <div class="team-avatar">SF</div>
+                        <h6 class="fw-bold mb-1 text-white">Samuel</h6>
+                        <span class="small text-secondary">Freitas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-4 border-top text-center" style="border-color: var(--border-color) !important; background-color: var(--dark-bg);">
+        <div class="container">
+            <p class="mb-1 text-secondary small">&copy; 2026 Movesafe. Projeto desenvolvido para avaliação de Prática Final de Programação Front End.</p>
+            <p class="mb-0 text-secondary small">UniCesumar - Centro Universitário de Maringá | Engenharia de Software | 3º Semestre</p>
+            <p class="mb-0 text-emerald small mt-2 fw-bold">Orientador: Prof. Esp. Dacio F. Machado</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="MOVESAFE_prototipo.js"></script>   
+</body>
+</html>
